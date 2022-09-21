@@ -32,6 +32,10 @@ const globalStyles = css`
     height: 1px;
   }
 
+  input {
+    outline: none;
+  }
+
   * {
     box-sizing: border-box;
   }

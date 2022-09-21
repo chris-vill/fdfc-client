@@ -1,12 +1,11 @@
 import * as SC from "./HomePage.styles";
-import { Button } from "components";
+import { Input } from "components";
 
 function HomePage() {
   return (
     <>
       <SC.Container>
-        <Button btnType="primary" />
-        <Button btnType="secondary" />
+        <Input label="Text Label" type="password" />
       </SC.Container>
     </>
   );
