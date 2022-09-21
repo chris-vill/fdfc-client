@@ -3,6 +3,7 @@ import { css } from "@emotion/react";
 export const colors = css`
   --clr-primary: #165f72;
   --clr-primary-t20: #457f8e;
+  --clr-primary-t80: #d0dfe3;
   --clr-primary-s20: #124c5b;
   --clr-accent: #0d3541;
   --clr-accent-t20: #3d5d67;
@@ -22,3 +23,4 @@ export const colors = css`
   --clr-white: #ffffff;
   --clr-black: #000000;
 `;
+

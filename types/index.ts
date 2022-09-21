@@ -1,1 +1,2 @@
-export * from "components/pages/HomePage/HomePage.types";
+export * from "components/basic/Button/Button.types";
+

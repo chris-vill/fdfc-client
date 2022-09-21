@@ -5,7 +5,8 @@ function HomePage() {
   return (
     <>
       <SC.Container>
-        <Button />
+        <Button btnType="primary" />
+        <Button btnType="secondary" />
       </SC.Container>
     </>
   );

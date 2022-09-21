@@ -1,10 +1,9 @@
 import type { HTMLAttributes } from "react";
 import { css } from "@emotion/react";
 
-import type * as T from "types";
-import { createStyledComponent } from "utils";
+import * as _ from "utils";
 
-export const Container = createStyledComponent<T.ContainerProps, HTMLAttributes<HTMLDivElement>>(
+export const Container = _.createStyledComponent<ContainerProps, HTMLAttributes<HTMLDivElement>>(
   "div.home-page_container",
   (P) => ({
     base: css`
@@ -17,3 +16,4 @@ export const Container = createStyledComponent<T.ContainerProps, HTMLAttributes<
   })
 );
 
+export type ContainerProps = {};

@@ -14,10 +14,11 @@ const globalStyles = css`
 
   html,
   body {
-    padding: 0;
-    margin: 0;
+    background-color: var(--clr-primary-t80);
     font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell,
       Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    margin: 0;
+    padding: 0;
   }
 
   a {

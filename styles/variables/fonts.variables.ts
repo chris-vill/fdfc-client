@@ -24,7 +24,7 @@ export const fonts = css`
   --fw-item-header: 700;
   --fw-item-subheader: 400;
   --fw-item-body: 400;
-  --fw-button: 400;
+  --fw-button: 700;
 
   --fs-page-header: normal;
   --fs-page-subheader: normal;
@@ -50,3 +50,4 @@ export const fonts = css`
   --tt-item-body: none;
   --tt-button: uppercase;
 `;
+

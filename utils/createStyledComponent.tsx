@@ -30,11 +30,12 @@ function createStyledComponent<
   return (props: StyledComponentProps) => {
     const { children, ...otherProps } = props;
     const stylesObj = styles(props);
+    //@ts-ignore
+    const isDisabled = otherProps.disabled;
 
     //@ts-ignore
     const StyledComponent = styled[tagName](() => {
-      const { base, visited, focus, hover, active, checked, disabled } =
-        stylesObj;
+      const { base, visited, focus, hover, active, checked, disabled } = stylesObj;
 
       return css`
         ${base}
@@ -48,11 +49,11 @@ function createStyledComponent<
         }
 
         &:hover {
-          ${hover}
+          ${!isDisabled && hover}
         }
 
         &:active {
-          ${active}
+          ${!isDisabled && active}
         }
 
         &:checked {
@@ -81,3 +82,4 @@ function createStyledComponent<
 }
 
 export { createStyledComponent };
+
