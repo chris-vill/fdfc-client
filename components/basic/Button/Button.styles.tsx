@@ -67,5 +67,5 @@ export const Container = _.createStyledComponent<
   };
 });
 
-type ContainerProps = T.ButtonProps & {};
+type ContainerProps = Pick<T.ButtonProps, "btnType"> & {};
 

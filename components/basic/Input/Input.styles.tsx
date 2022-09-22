@@ -1,62 +1,66 @@
-import type { HTMLAttributes, InputHTMLAttributes } from "react";
+import type { HTMLAttributes, InputHTMLAttributes, ReactNode } from "react";
 import { css } from "@emotion/react";
+import styled from "@emotion/styled";
 
-import type * as T from "types";
 import * as _ from "utils";
 import { fonts } from "styles";
 
-export const Container = _.createStyledComponent<ContainerProps, HTMLAttributes<HTMLDivElement>>(
-  "div.input_container",
-  (props) => {
-    return {
-      base: css`
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-      `,
-    };
-  }
-);
+export const Container = (props: ContainerProps) => {
+  const { children, isError, ...otherProps } = props;
 
-export const Label = _.createStyledComponent<LabelProps, HTMLAttributes<HTMLSpanElement>>(
-  "span.input_container",
-  (props) => {
-    return {
-      base: css`
-        ${fonts.itemSubheader}
+  const StyledComponent = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 4px 6px 6px;
 
-        color: var(--clr-accent);
+    & > span {
+      ${fonts.itemSubheader}
 
-        /*
-          FIXME :has selector is not working
+      color: var(--clr-accent);
 
-          &:has(+ .input_container:focus) {
-            color: var(--clr-primary);
-          }
-        */
-      `,
-    };
-  }
-);
+      /*
+        TS doesn't recognize sibling selector inside :has()
+        &:has(+ input:focus) {}
+      */
+    }
 
-export const Input = _.createStyledComponent<InputProps, InputHTMLAttributes<HTMLInputElement>>(
-  "input.input_container",
-  (props) => {
-    return {
-      base: css`
-        border: 2px solid var(--clr-accent);
-        border-radius: 4px;
-        color: var(--clr-dark);
-      `,
-      focus: css`
+    & > input {
+      border: 2px solid var(--clr-accent);
+      border-radius: 4px;
+      color: var(--clr-dark);
+
+      &:focus {
         border-color: var(--clr-primary-t20);
-      `,
-    };
-  },
-  true
-);
+      }
+    }
 
-type ContainerProps = {};
-type LabelProps = {};
-type InputProps = {};
+    ${isError &&
+    css`
+      & > span {
+        color: var(--clr-error-s20);
+      }
+
+      & > input {
+        border-color: var(--clr-error-s20);
+        color: var(--clr-error-s20);
+
+        &::placeholder {
+          color: var(--clr-error-s20);
+        }
+      }
+    `}
+  `;
+
+  return (
+    <StyledComponent className="input" {...otherProps}>
+      {children}
+    </StyledComponent>
+  );
+};
+
+type ContainerProps = {
+  children?: ReactNode;
+  isError: boolean;
+};
 

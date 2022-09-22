@@ -1,11 +1,11 @@
 import * as SC from "./HomePage.styles";
-import { Input } from "components";
+import { Form } from "components";
 
 function HomePage() {
   return (
     <>
       <SC.Container>
-        <Input label="Text Label" type="password" />
+        <Form.Login />
       </SC.Container>
     </>
   );

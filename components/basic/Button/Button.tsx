@@ -2,12 +2,12 @@ import * as T from "types";
 import * as SC from "./Button.styles";
 
 function Button(props: T.ButtonProps) {
-  const { btnType, ...htmlAttrs } = props;
+  const { btnType, label, ...htmlAttrs } = props;
 
   return (
     <>
       <SC.Container {...{ btnType }} {...htmlAttrs}>
-        Hello
+        {label}
       </SC.Container>
     </>
   );

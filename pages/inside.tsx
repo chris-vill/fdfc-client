@@ -2,13 +2,13 @@ import type { NextPage } from "next";
 
 import { Page } from "components";
 
-const Home: NextPage = () => {
+const Inside: NextPage = () => {
   return (
     <>
-      <Page.Home />
+      <Page.Inside />
     </>
   );
 };
 
-export default Home;
+export default Inside;
 
