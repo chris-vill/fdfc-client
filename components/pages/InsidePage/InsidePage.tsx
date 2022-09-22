@@ -20,15 +20,11 @@ function InsidePage() {
   return (
     <>
       <SC.Container>
-        <Button btnType="secondary" label="Logout" onClick={onLogout} />
+        <Button btnType="secondary" label="Logout" onClick={clear} />
         <Info {...{ info }} />
       </SC.Container>
     </>
   );
-
-  function onLogout() {
-    clear();
-  }
 }
 
 export { InsidePage };

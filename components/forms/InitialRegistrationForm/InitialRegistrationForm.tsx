@@ -5,7 +5,7 @@ import type { SubmitHandler } from "react-hook-form";
 import { useForm, FormProvider } from "react-hook-form";
 import * as yup from "yup";
 
-import * as SC from "./LoginForm.styles";
+import * as SC from "./InitialRegistrationForm.styles";
 import { Button, Input } from "components";
 import { api, useStore } from "core";
 
@@ -16,11 +16,10 @@ const loginSchema = yup.object({
 
 type LoginSchema = yup.InferType<typeof loginSchema>;
 
-function LoginForm() {
+function InitialRegistrationForm() {
   const info = useStore((state) => state.info);
-  const currentStep = useStore((state) => state.currentStep);
-  const furthestStep = useStore((state) => state.furthestStep);
   const setInfo = useStore((state) => state.setInfo);
+  const furthestStep = useStore((state) => state.furthestStep);
   const setCurrentStep = useStore((state) => state.setCurrentStep);
   const setFurthestStep = useStore((state) => state.setFurthestStep);
   const isLoggedIn = useStore((state) => state.isLoggedIn);
@@ -32,7 +31,7 @@ function LoginForm() {
   const { handleSubmit } = methods;
 
   const onLogin: SubmitHandler<LoginSchema> = async (formData) => {
-    const response = await api.postLogin(formData);
+    const response = await api.postRegister(formData);
     const { registration_status } = response;
 
     if (!!Object.keys(response).length) {
@@ -47,40 +46,22 @@ function LoginForm() {
 
   useEffect(() => {
     if (isLoggedIn) {
-      if (furthestStep === 0) {
-        router.push("/inside");
-      } else {
-        router.push("/" + info.registration_status);
-      }
+      router.push("/step1");
     }
-  }, [currentStep, furthestStep, info, isLoggedIn, router]);
+  }, [router, isLoggedIn]);
 
   return (
     <>
       <FormProvider {...methods}>
         <SC.Container>
-          <SC.Label>Login</SC.Label>
+          <SC.Label>Initial Registration</SC.Label>
           <SC.Fields>
             <Input label="Username" name="username" type="text" />
             <Input label="Password" name="password" type="password" />
           </SC.Fields>
           <SC.Buttons>
-            <Button
-              btnType="secondary"
-              label="Register"
-              onClick={(ev) => {
-                ev.preventDefault();
-                router.push("/registration");
-              }}
-            />
-            <Button
-              btnType="primary"
-              label="Login"
-              onClick={(ev) => {
-                ev.preventDefault();
-                handleSubmit(onLogin)();
-              }}
-            />
+            <Button btnType="secondary" label="Cancel" />
+            <Button btnType="primary" label="Submit" onClick={handleSubmit(onLogin)} />
           </SC.Buttons>
         </SC.Container>
       </FormProvider>
@@ -88,5 +69,5 @@ function LoginForm() {
   );
 }
 
-export { LoginForm };
+export { InitialRegistrationForm };
 

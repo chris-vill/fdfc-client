@@ -23,7 +23,7 @@ const api = {
   },
   putAdditionalInfo: async (payload: PutAdditionalInfoPayload) => {
     try {
-      const { data } = await axios.post("/additional-info", payload);
+      const { data } = await axios.put("/additional-info", payload);
 
       return data;
     } catch (error) {
@@ -32,7 +32,7 @@ const api = {
   },
   putContactInfo: async (payload: PutContactInfoPayload) => {
     try {
-      const { data } = await axios.post("/contact-info", payload);
+      const { data } = await axios.put("/contact-info", payload);
 
       return data;
     } catch (error) {
@@ -41,7 +41,7 @@ const api = {
   },
   putLocationInfo: async (payload: PutLocationInfoPayload) => {
     try {
-      const { data } = await axios.post("/location-info", payload);
+      const { data } = await axios.put("/location-info", payload);
 
       return data;
     } catch (error) {
@@ -63,18 +63,21 @@ type PostRegisterPayload = {
 };
 
 type PutAdditionalInfoPayload = {
+  id: number;
   civil_status: string;
   occupation: string;
 };
 
 type PutContactInfoPayload = {
+  id: number;
   mobile: string;
-  landline: number;
+  landline: string;
   email_address: string;
 };
 
 type PutLocationInfoPayload = {
+  id: number;
   address_permanent: string;
-  addrss_temporary: string;
+  address_temporary: string;
 };
 

@@ -5,21 +5,20 @@ import type { SubmitHandler } from "react-hook-form";
 import { useForm, FormProvider } from "react-hook-form";
 import * as yup from "yup";
 
-import * as SC from "./LoginForm.styles";
+import * as SC from "./LocationInfoForm.styles";
 import { Button, Input } from "components";
 import { api, useStore } from "core";
 
 const loginSchema = yup.object({
-  username: yup.string().required("Required"),
-  password: yup.string().required("Required"),
+  address_permanent: yup.string().required("Required"),
+  address_temporary: yup.string().required("Required"),
 });
 
 type LoginSchema = yup.InferType<typeof loginSchema>;
 
-function LoginForm() {
-  const info = useStore((state) => state.info);
+function LocationInfoForm() {
   const currentStep = useStore((state) => state.currentStep);
-  const furthestStep = useStore((state) => state.furthestStep);
+  const info = useStore((state) => state.info);
   const setInfo = useStore((state) => state.setInfo);
   const setCurrentStep = useStore((state) => state.setCurrentStep);
   const setFurthestStep = useStore((state) => state.setFurthestStep);
@@ -32,14 +31,21 @@ function LoginForm() {
   const { handleSubmit } = methods;
 
   const onLogin: SubmitHandler<LoginSchema> = async (formData) => {
-    const response = await api.postLogin(formData);
+    const response = await api.putLocationInfo({
+      ...formData,
+      id: info.id as number,
+    });
     const { registration_status } = response;
 
     if (!!Object.keys(response).length) {
       const newCurrentStep =
         registration_status === "finished" ? 0 : parseInt(registration_status.replace("step", ""));
 
-      setInfo(response);
+      setInfo({
+        ...response,
+        registration_status: "step3",
+      });
+
       setCurrentStep(newCurrentStep);
       setFurthestStep(newCurrentStep);
     }
@@ -47,35 +53,37 @@ function LoginForm() {
 
   useEffect(() => {
     if (isLoggedIn) {
-      if (furthestStep === 0) {
+      if (currentStep === 0) {
         router.push("/inside");
-      } else {
-        router.push("/" + info.registration_status);
+      } else if (currentStep !== 2) {
+        router.push("/step" + currentStep);
       }
+    } else {
+      router.push("/");
     }
-  }, [currentStep, furthestStep, info, isLoggedIn, router]);
+  }, [currentStep, router, isLoggedIn]);
 
   return (
     <>
       <FormProvider {...methods}>
         <SC.Container>
-          <SC.Label>Login</SC.Label>
+          <SC.Label>Location Info (2 / 3)</SC.Label>
           <SC.Fields>
-            <Input label="Username" name="username" type="text" />
-            <Input label="Password" name="password" type="password" />
+            <Input label="Permanent Address" name="address_permanent" type="text" />
+            <Input label="Temporary Address" name="address_temporary" type="text" />
           </SC.Fields>
           <SC.Buttons>
             <Button
               btnType="secondary"
-              label="Register"
+              label="Back"
               onClick={(ev) => {
                 ev.preventDefault();
-                router.push("/registration");
+                setCurrentStep(1);
               }}
             />
             <Button
               btnType="primary"
-              label="Login"
+              label="Submit"
               onClick={(ev) => {
                 ev.preventDefault();
                 handleSubmit(onLogin)();
@@ -88,5 +96,5 @@ function LoginForm() {
   );
 }
 
-export { LoginForm };
+export { LocationInfoForm };
 

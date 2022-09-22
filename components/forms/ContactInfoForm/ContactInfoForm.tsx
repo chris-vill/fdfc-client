@@ -5,41 +5,47 @@ import type { SubmitHandler } from "react-hook-form";
 import { useForm, FormProvider } from "react-hook-form";
 import * as yup from "yup";
 
-import * as SC from "./LoginForm.styles";
+import * as SC from "./ContactInfoForm.styles";
 import { Button, Input } from "components";
 import { api, useStore } from "core";
 
-const loginSchema = yup.object({
-  username: yup.string().required("Required"),
-  password: yup.string().required("Required"),
+const schema = yup.object({
+  mobile: yup.string().required("Required"),
+  landline: yup.string().required("Required"),
+  email_address: yup.string().required("Required"),
 });
 
-type LoginSchema = yup.InferType<typeof loginSchema>;
+type Schema = yup.InferType<typeof schema>;
 
-function LoginForm() {
-  const info = useStore((state) => state.info);
+function ContactInfoForm() {
   const currentStep = useStore((state) => state.currentStep);
-  const furthestStep = useStore((state) => state.furthestStep);
+  const info = useStore((state) => state.info);
   const setInfo = useStore((state) => state.setInfo);
   const setCurrentStep = useStore((state) => state.setCurrentStep);
   const setFurthestStep = useStore((state) => state.setFurthestStep);
   const isLoggedIn = useStore((state) => state.isLoggedIn);
   const router = useRouter();
-  const methods = useForm<LoginSchema>({
-    resolver: yupResolver(loginSchema),
+  const methods = useForm<Schema>({
+    resolver: yupResolver(schema),
   });
 
-  const { handleSubmit } = methods;
+  const { handleSubmit, formState } = methods;
 
-  const onLogin: SubmitHandler<LoginSchema> = async (formData) => {
-    const response = await api.postLogin(formData);
+  const onLogin: SubmitHandler<Schema> = async (formData) => {
+    const response = await api.putContactInfo({
+      ...formData,
+      id: info.id as number,
+    });
     const { registration_status } = response;
 
     if (!!Object.keys(response).length) {
       const newCurrentStep =
         registration_status === "finished" ? 0 : parseInt(registration_status.replace("step", ""));
 
-      setInfo(response);
+      setInfo({
+        ...response,
+        registration_status: "finished",
+      });
       setCurrentStep(newCurrentStep);
       setFurthestStep(newCurrentStep);
     }
@@ -47,35 +53,39 @@ function LoginForm() {
 
   useEffect(() => {
     if (isLoggedIn) {
-      if (furthestStep === 0) {
+      if (currentStep === 0) {
         router.push("/inside");
-      } else {
-        router.push("/" + info.registration_status);
+      } else if (currentStep !== 3) {
+        router.push("/step" + currentStep);
       }
+    } else {
+      router.push("/");
     }
-  }, [currentStep, furthestStep, info, isLoggedIn, router]);
+  }, [currentStep, router, isLoggedIn]);
 
   return (
     <>
       <FormProvider {...methods}>
         <SC.Container>
-          <SC.Label>Login</SC.Label>
+          <SC.Label>Contact Info (3 / 3)</SC.Label>
           <SC.Fields>
-            <Input label="Username" name="username" type="text" />
-            <Input label="Password" name="password" type="password" />
+            <Input label="Mobile" name="mobile" type="text" />
+            <Input label="Landline" name="landline" type="text" />
+            <Input label="Email Address" name="email_address" type="text" />
           </SC.Fields>
           <SC.Buttons>
             <Button
               btnType="secondary"
-              label="Register"
+              label="Back"
               onClick={(ev) => {
                 ev.preventDefault();
-                router.push("/registration");
+                setCurrentStep(2);
               }}
             />
             <Button
+              type="submit"
               btnType="primary"
-              label="Login"
+              label="Submit"
               onClick={(ev) => {
                 ev.preventDefault();
                 handleSubmit(onLogin)();
@@ -88,5 +98,5 @@ function LoginForm() {
   );
 }
 
-export { LoginForm };
+export { ContactInfoForm };
 
